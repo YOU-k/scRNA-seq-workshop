@@ -1,16 +1,24 @@
-Package: BuildABiocWorkshop2020
-Title: Bioconductor Workshop Template and Github Actions
+Package: scRNA-seq analysis workshop
+Title: scRNA-seq analysis workshop
 Version: 0.1.1
 Authors@R: 
-    person(given = "Sean",
-           family = "Davis",
+    c(person(given = "Yue",
+           family = "You",
            role = c("aut", "cre"),
-           email = "seandavi@gmail.com",
-           comment = c(ORCID = "your-orc-id-here"))
-Description: This package serves as a template for using github actions to 
-    prepare a Bioconductor Workshop package for use. In particular,
-    a pkgdown website and docker image are generated based on workflow 
-    settings. 
+           email = "you.y@wehi.edu.au"),
+           
+           person(given = "Luyi",
+            family = "Tian",
+            role = c("aut"),
+            email = "tian.l@wehi.edu.au"))
+Description: In this workshop (presented in Mandarin), 
+you will learn how to analyse single-cell RNA-sequencing count data produced by the Chromium 10x platform using R/Bioconductor. 
+This will include reading the data into R, pre-processing data, normalization, feature selection, dimensionality reduction and downstream analysis, 
+such as clustering and cell type annotation. You will learn how to generate common plots for analysis and visualisation of single cell gene expfression data, 
+such as diagnostic plots to assess the data quality as well as dimensionality reduction techniques such as principal components analysis and t-distributed stochastic neighbourhood embedding (t-SNE). 
+The material we will be covering on single-cell RNA-sequencing analysis is a subset of the work of Amerzquita et al. (2020) Nature Methods,17:137–145 available at https://osca.bioconductor.org. 
+The course is aimed at PhD students, Master’s students, and third & fourth year undergraduate students. 
+
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,9 +27,8 @@ RoxygenNote: 7.1.0
 Depends: 
     Biobase
 Suggests: 
-    knitr,
-    rmarkdown,
-    pkgdown
+    knitr,rmarkdown,pkgdown, BiocFileCache,DropletUtils,scater,EnsDb.Hsapiens.v86,scran,SingleR,RColorBrewer,pheatmap,
+    TENxPBMCData
 URL: https://seandavi.github.io/BuildABiocWorkshop2020/
 BugReports: https://github.com/seandavi/BuildABiocWorkshop2020/issues/new/choose
 VignetteBuilder: knitr
