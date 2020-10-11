@@ -29,7 +29,7 @@ Depends:
 Suggests: 
     knitr,rmarkdown,pkgdown, BiocFileCache,DropletUtils,scater,EnsDb.Hsapiens.v86,scran,SingleR,RColorBrewer,pheatmap,
     TENxPBMCData
-URL: https://seandavi.github.io/BuildABiocWorkshop2020/
-BugReports: https://github.com/seandavi/BuildABiocWorkshop2020/issues/new/choose
+URL: https://github.com/YOU-k/scRNA-seq-workshop
+BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/new/choose
 VignetteBuilder: knitr
 DockerImage: seandavi/buildabiocworkshop2020:latest
