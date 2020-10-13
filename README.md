@@ -41,11 +41,11 @@ The following R/Bioconductor packages will be explicitly used:
 
  - Understand how scRNA-seq data are generated.
  - Learn of existing packages and functions used in this workshop. 
- - Become familiar with the fundamental concepts of normalization, dimension reduction, clustering.
+ - Become familiar with the fundamental concepts of normalization, feature selection, dimensionality reduction.
 
 ## Learning objectives
 
- - Analyze a 10x dataset which contains 4K cells. 
+ - Analyze a 10x dataset which contains 4K cells (https://support.10xgenomics.com/single-cell-gene-expression/datasets). 
  - Run basic steps included in scRNA-seq analysis.
  - Learn how to interpret on scRNA-seq analysis generated results.
  - Take away some tips and tricks on generating related plots.
