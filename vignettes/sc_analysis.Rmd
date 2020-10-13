@@ -10,33 +10,78 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+## Description
+
+In this workshop (presented in Mandarin), you will learn how to analyse single-cell RNA-sequencing count data produced by the Chromium 10x platform using R/Bioconductor. This will include reading the data into R, pre-processing data, normalization, feature selection, dimensionality reduction and downstream analysis, such as clustering and cell type annotation. 
+
+Expectation: You will learn how to generate common plots for analysis and visualisation of single cell gene expfression data, such as diagnostic plots to assess the data quality as well as dimensionality reduction techniques such as principal components analysis and t-distributed stochastic neighbourhood embedding (t-SNE). The material we will be covering on single-cell RNA-sequencing analysis is a subset of the work of Amerzquita et al. (2020) Nature Methods,17:137–145 available at https://osca.bioconductor.org. 
+
+Pre-requisites: The course is aimed at PhD students, Master’s students, and third & fourth year undergraduate students. Some basic R knowledge is assumed - this is not an introduction to R course. If you are not familiar with the R statistical programming language it is compulsory that you work through an introductory R course before you attend this workshop.
+
+
+### Participation
+
+After the lecture, participants are expected to follow along the hands-on session. we highly recommend participants bringing your own laptop.
+
+### _R_ / _Bioconductor_ packages used
+
+The following R/Bioconductor packages will be explicitly used: 
+
+* DropletUtils
+* scran
+* scater
+
+## Time outline
+
+| Activity                         | Time |
+|----------------------------------|------|
+| Introduction to scRNA-seq        | 10m  |
+| Analysis workflow                | 20m  |
+| Hands on session                 | 15m  |
+| Q & A                            | 10m  |
+
+
+
+
+
+## 数据准备
+
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.path='figs/',
                       echo=FALSE, warning=FALSE, message=FALSE)
 ```
 
-# 背景介绍
-
-In this workshop (presented in Mandarin), you will learn how to analyse single-cell RNA-sequencing count data produced by the Chromium 10x platform using R/Bioconductor. This will include reading the data into R, pre-processing data, normalization, feature selection, dimensionality reduction and downstream analysis, such as clustering and cell type annotation. You will learn how to generate common plots for analysis and visualisation of single cell gene expfression data, such as diagnostic plots to assess the data quality as well as dimensionality reduction techniques such as principal components analysis and t-distributed stochastic neighbourhood embedding (t-SNE). The material we will be covering on single-cell RNA-sequencing analysis is a subset of the work of Amerzquita et al. (2020) Nature Methods,17:137–145 available at https://osca.bioconductor.org. The course is aimed at PhD students, Master’s students, and third & fourth year undergraduate students. Some basic R knowledge is assumed - this is not an introduction to R course. If you are not familiar with the R statistical programming language it is compulsory that you work through an introductory R course before you attend this workshop.
-
-
-
-# 数据预处理
-
+下载10x PBMC4k数据并读取。
 ```{r}
 #--- loading ---#
 library(BiocFileCache)
 bfc <- BiocFileCache("raw_data", ask = FALSE)
 raw.path <- bfcrpath(bfc, file.path("http://cf.10xgenomics.com/samples",
-   "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"))
+    "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"))
 untar(raw.path, exdir=file.path(tempdir(), "pbmc4k"))
 
 library(DropletUtils)
 fname <- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
-
-#fname="data/raw_gene_bc_matrices/GRCh38"
 sce.pbmc <- read10xCounts(fname, col.names=TRUE)
+```
 
+## 质量控制。
+
+
+由于10x 技术会使得外部RNA，也就是不包含微滴的里的细胞被同时测序。在分析之前，我们需要确保得到的barcode数据都相对应活细胞。
+这里，我们使用`emptyDrops`来筛选“真”细胞。
+```{r}
+#--- cell-detection ---#
+set.seed(100)
+e.out <- emptyDrops(counts(sce.pbmc))
+sce.pbmc <- sce.pbmc[,which(e.out$FDR <= 0.001)]
+```
+
+
+对于得到的基因，根据gene ID 进行基因注释，得到基因名，并且知道其所在染色体（用于之后的细胞质量控制）。
+
+```{r}
 #--- gene-annotation ---#
 library(scater)
 rownames(sce.pbmc) <- uniquifyFeatureNames(
@@ -45,29 +90,44 @@ rownames(sce.pbmc) <- uniquifyFeatureNames(
 library(EnsDb.Hsapiens.v86)
 location <- mapIds(EnsDb.Hsapiens.v86, keys=rowData(sce.pbmc)$ID, 
     column="SEQNAME", keytype="GENEID")
+```
 
-#--- cell-detection ---#
-set.seed(100)
-e.out <- emptyDrops(counts(sce.pbmc))
-sce.pbmc <- sce.pbmc[,which(e.out$FDR <= 0.001)]
-
+这里，我们认为线粒体表达量高的barcode对应细胞质mRNA已经流出的破损细胞。并用这个指标来进行筛查过滤。
+```{r}
 #--- quality-control ---#
 stats <- perCellQCMetrics(sce.pbmc, subsets=list(Mito=which(location=="MT")))
 high.mito <- isOutlier(stats$subsets_Mito_percent, type="higher")
 sce.pbmc <- sce.pbmc[,!high.mito]
+```
 
+## 数据标准化
+
+由于在mRNA分子的捕获，逆转录，测序过程中存在一定的技术误差，相同细胞的计数深度可能不相同。我们需要在进行细胞之间的比对之前，先尽可能的排除采样效应。进行数据标准化，使得细胞之间存在可比性。这里我们使用`scran`(Lun et al,2016a)，一种允许更多细胞异质性的方法。
+
+
+```{r}
 #--- normalization ---#
 library(scran)
 set.seed(1000)
 clusters <- quickCluster(sce.pbmc)
 sce.pbmc <- computeSumFactors(sce.pbmc, cluster=clusters)
 sce.pbmc <- logNormCounts(sce.pbmc)
+```
 
+## 特征选择
+
+为了减轻下游分析工具的计算负担，减少数据中的噪声，我们需要先进行特征选择。
+
+```{r}
 #--- variance-modelling ---#
 set.seed(1001)
 dec.pbmc <- modelGeneVarByPoisson(sce.pbmc)
 top.pbmc <- getTopHVGs(dec.pbmc, prop=0.1)
+```
 
+特征选择后，单细胞表达矩阵的维数可以通过专门的降维算法进一步降低。使得数据可以直观可视化，并且将数据简化为基本组成部分。
+
+```{r}
 #--- dimensionality-reduction ---#
 set.seed(10000)
 sce.pbmc <- denoisePCA(sce.pbmc, subset.row=top.pbmc, technical=dec.pbmc)
@@ -79,10 +139,6 @@ set.seed(1000000)
 sce.pbmc <- runUMAP(sce.pbmc, dimred="PCA")
 ```
 
-```{r}
-library(SingleR)
-library(RColorBrewer)
-```
 
 #聚类分析
 
@@ -102,12 +158,18 @@ table(clust)
 使用tSNE对聚类进行可视化。
 
 ```{r}
-plotReducedDim(sce.pbmc, "TSNE", colour_by="cluster",text_by="cluster")
+plotTSNE(sce.pbmc, colour_by="cluster",text_by="cluster")
 ```
 
 # 寻找聚类特异表达基因
 
 在获得了聚类之后，我们想要知道每个聚类都哪些高表达的基因，这些基因往往是能区分不同细胞类型的marker gene，也可以帮助我们了解不同聚类的生物学功能。
+
+```{r}
+library(RColorBrewer)
+```
+
+这里，我们通过比对某一cluster和其他所有cluster的表达来找到marker gene， 并且只挑选显示上调基因。
 
 ```{r}
 markers.pbmc <- findMarkers(sce.pbmc, sce.pbmc$cluster, 
@@ -118,7 +180,7 @@ markers.pbmc <- findMarkers(sce.pbmc, sce.pbmc$cluster,
 markers.pbmc[[1]][order(markers.pbmc[[1]]$FDR),]
 ```
 
-
+查看marker gene。
 ```{r}
 # NOTE: this is not efficient for large iteration.
 marker_genes = c()
@@ -132,22 +194,22 @@ marker_genes = unique(marker_genes)
 marker_genes
 ```
 
-```{r}
-plotExpression(sce.pbmc, x=I(factor(sce.pbmc$cluster)), 
-    features="MS4A1")
-```
+查看特定基因在不同cluster的表达量。
 
+```{r}
+plotExpression(sce.pbmc, x="cluster",features="MS4A1")
+```
 
 使用热图对marker gene进行可视化。
 
 ```{r}
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
-
 anno_df = as.data.frame(colData(sce.pbmc))
 anno_df = anno_df[,"cluster", drop=FALSE]
 
 
 col_cluster = getPalette(nlevels(anno_df$cluster))
+
 names(col_cluster) =  levels(anno_df$cluster)
 
 annotation_colors = list(cluster=col_cluster)
@@ -169,7 +231,11 @@ pheatmap::pheatmap(tmp_expr[,order(sce.pbmc$cluster)],
 
 # 使用`singleR`进行细胞类型注释
 
+```{r}
+library(SingleR)
+```
 
+我们选择 BlueprintEncodeData() 来作为参考数据。
 
 ```{r}
 ref <- BlueprintEncodeData()
@@ -181,6 +247,7 @@ table(pred$labels)
 plotScoreHeatmap(pred)
 ```
 
+利用每个cluster和对每个细胞计算得到的可能细胞类型画heatmap。
 
 ```{r}
 tab <- table(Assigned=pred$pruned.labels, Cluster=sce.pbmc$cluster)
@@ -189,6 +256,5 @@ tab <- table(Assigned=pred$pruned.labels, Cluster=sce.pbmc$cluster)
 library(pheatmap)
 pheatmap(log2(tab+10), color=colorRampPalette(c("white", "blue"))(101))
 ```
-
 
 

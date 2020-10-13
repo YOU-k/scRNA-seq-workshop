@@ -1,55 +1,51 @@
-# BuildABiocWorkshop2020
+# scRNA-seq analysis workshop
 
 ![.github/workflows/basic_checks.yaml](https://github.com/YOU-k/scRNA-seq-workshop/workflows/.github/workflows/basic_checks.yaml/badge.svg)
 
-This package is a template for building a Bioconductor 2020 workshop. The package
-includes Github actions to:
+# Workshop Description
 
-1. Set up bioconductor/bioconductor_docker:devel on Github resources
-2. Install package dependencies for your package (based on the `DESCRIPTION` file)
-3. Run `rcmdcheck::rcmdcheck`
-4. Build a pkgdown website and push it to github pages
-5. Build a docker image with the installed package and dependencies
+In this workshop (presented in Mandarin), you will learn how to analyse single-cell RNA-sequencing count data produced by the Chromium 10x platform using R/Bioconductor. This will include reading the data into R, pre-processing data, normalization, feature selection, dimensionality reduction and downstream analysis, such as clustering and cell type annotation. 
 
-## Responsibilities
+Expectation: You will learn how to generate common plots for analysis and visualisation of single cell gene expfression data, such as diagnostic plots to assess the data quality as well as dimensionality reduction techniques such as principal components analysis and t-distributed stochastic neighbourhood embedding (t-SNE). The material we will be covering on single-cell RNA-sequencing analysis is a subset of the work of Amerzquita et al. (2020) Nature Methods,17:137–145 available at https://osca.bioconductor.org. 
 
-This year, package authors will be primarily responsible for:
+# Pre-requisites 
 
-1. Creating a landing site of their choosing for their workshops (a website). This website should be listed in the `DESCRIPTION` file as the `URL`.
-2. Creating a docker account and image that will contain workshop materials and the installed packages necessary to run those materials. The name of the resulting docker image, including "tag" if desired, should be listed in a non-standard tag, `DockerImage:` in the `DESCRIPTION` file. 
-
-Both of those tasks can be accomplished using the Github actions included in this template package. The vignette accompanying this package describes how to accomplish both of these tasks.
-
-## Details
-
-For detailed instructions, see the `How to build a workshop` article/vignette.
-
-## Results of successful deployment
-
-- A working docker image that contains the installed package and dependencies.
-- An up-to-date `pkgdown` website at https://YOURUSERNAME.github.io/YOURREPOSITORYNAME/
-- Docker image will be tagged with `latest`, `sha-XXXXXX` where `XXXXXX` is the hash of the current `master` commit, and `master`. 
-
-## To use the resulting image:
-
-```sh
-docker run -e PASSWORD=<choose_a_password_for_rstudio> -p 8787:8787 YOURDOCKERIMAGENAME
-```
-Once running, navigate to https://localhost:8787/ and then login with `rstudio`:`yourchosenpassword`. 
-
-To try with **this** repository docker image:
-
-```sh
-docker run -e PASSWORD=abc -p 8787:8787 seandavi/buildabiocworkshop2020
-```
-
-*NOTE*: Running docker that uses the password in plain text like above exposes the password to others 
-in a multi-user system (like a shared workstation or compute node). In practice, consider using an environment 
-variable instead of plain text to pass along passwords and other secrets in docker command lines. 
+The course is aimed at PhD students, Master’s students, and third & fourth year undergraduate students. Some basic R knowledge is assumed - this is not an introduction to R course. If you are not familiar with the R statistical programming language it is compulsory that you work through an introductory R course before you attend this workshop.
 
 
-## Whatcha get
+# Participation
 
-https://seandavi.github.io/BuildABiocWorkshop2020
+After the lecture, participants are expected to follow along the hands-on session. we highly recommend participants bringing your own laptop.
 
-![dockerhub](https://github.com/seandavi/BuildABiocWorkshop2020/raw/master/inst/images/dockerhub_result.png)
+# _R_ / _Bioconductor_ packages used
+
+The following R/Bioconductor packages will be explicitly used: 
+
+* DropletUtils
+* scran
+* scater
+* singleR
+
+# Time outline
+
+| Activity                         | Time |
+|----------------------------------|------|
+| Introduction to scRNA-seq        | 10m  |
+| Analysis workflow                | 20m  |
+| Hands on session                 | 15m  |
+| Q & A                            | 10m  |
+
+# Workshop goals and objectives
+
+## Learning goals
+
+ - Understand how scRNA-seq data are generated.
+ - Learn of existing packages and functions used in this workshop. 
+ - Become familiar with the fundamental concepts of normalization, dimension reduction, clustering.
+
+## Learning objectives
+
+ - Analyze a 10x dataset which contains 4K cells. 
+ - Run basic steps included in scRNA-seq analysis.
+ - Learn how to interpret on scRNA-seq analysis generated results.
+ - Take away some tips and tricks on generating related plots.
