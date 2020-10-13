@@ -1,34 +1,55 @@
-Package: scRNA-seq analysis workshop
+Package: BioCAsia2020scRNAseqWorkshop
 Title: scRNA-seq analysis workshop
-Version: 0.1.1
-Authors@R: 
-    c(person(given = "Yue",
+Version: 0.1.3
+Authors@R: c(
+    person(given = "Yue",
            family = "You",
            role = c("aut", "cre"),
            email = "you.y@wehi.edu.au"),
-           
-           person(given = "Luyi",
-            family = "Tian",
-            role = c("aut"),
-            email = "tian.l@wehi.edu.au"))
-Description: In this workshop (presented in Mandarin), 
-you will learn how to analyse single-cell RNA-sequencing count data produced by the Chromium 10x platform using R/Bioconductor. 
-This will include reading the data into R, pre-processing data, normalization, feature selection, dimensionality reduction and downstream analysis, 
-such as clustering and cell type annotation. You will learn how to generate common plots for analysis and visualisation of single cell gene expfression data, 
-such as diagnostic plots to assess the data quality as well as dimensionality reduction techniques such as principal components analysis and t-distributed stochastic neighbourhood embedding (t-SNE). 
-The material we will be covering on single-cell RNA-sequencing analysis is a subset of the work of Amerzquita et al. (2020) Nature Methods,17:137–145 available at https://osca.bioconductor.org. 
-The course is aimed at PhD students, Master’s students, and third & fourth year undergraduate students. 
-
-License: MIT + file LICENSE
+    person(given = "Luyi",
+           family = "Tian",
+           role = c("aut"),
+           email = "tian.l@wehi.edu.au"))
+Description:
+    In this workshop (presented in Mandarin), you will learn how to analyse 
+    single-cell RNA-sequencing count data produced by the Chromium 10x platform 
+    using R/Bioconductor. This will include reading the data into R, 
+    pre-processing data, normalization, feature selection, dimensionality 
+    reduction and downstream analysis, such as clustering and cell type 
+    annotation. You will learn how to generate common plots for analysis and 
+    visualisation of single cell gene expfression data, such as diagnostic 
+    plots to assess the data quality as well as dimensionality reduction 
+    techniques such as principal components analysis and t-distributed 
+    stochastic neighbourhood embedding (t-SNE). The material we will be 
+    covering on single-cell RNA-sequencing analysis is a subset of the work 
+    of Amerzquita et al. (2020) Nature Methods,17:137–145 available at 
+    https://osca.bioconductor.org. The course is aimed at PhD students,
+    Master’s students, and third & fourth year undergraduate students. 
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
-Depends: 
-    Biobase,BiocFileCache,DropletUtils,scater,EnsDb.Hsapiens.v86,scran,SingleR,RColorBrewer,pheatmap,TENxPBMCData
+RoxygenNote: 7.1.1
+Imports:
+    Biobase,
+    BiocFileCache,
+    DropletUtils,
+    scater,
+    EnsDb.Hsapiens.v86,
+    scran,
+    SingleR,
+    RColorBrewer,
+    pheatmap,
+    TENxPBMCData,
+    Rtsne,
+    uwot,
+    igraph,
+    celldex
 Suggests: 
-    knitr,rmarkdown,pkgdown
+    knitr,
+    rmarkdown,
+    pkgdown
 URL: https://github.com/YOU-k/scRNA-seq-workshop
-BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/new/choose
+BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/
 VignetteBuilder: knitr
-DockerImage: seandavi/buildabiocworkshop2020:latest
+DockerImage: chloeyou/bioc_asia_2020_scrna_seq_workshop:latest
