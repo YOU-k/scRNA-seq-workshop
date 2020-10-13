@@ -51,4 +51,4 @@ Suggests:
 URL: https://github.com/YOU-k/scRNA-seq-workshop
 BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/
 VignetteBuilder: knitr
-DockerImage: chloeyou/scRNA-seq-workshop:latest
+DockerImage: chloeyou/bioc_asia_2020_scrna_seq_workshop:latest
