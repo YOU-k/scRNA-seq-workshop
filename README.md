@@ -1,5 +1,7 @@
 # BuildABiocWorkshop2020
 
+![.github/workflows/basic_checks.yaml](https://github.com/YOU-k/scRNA-seq-workshop/workflows/.github/workflows/basic_checks.yaml/badge.svg)
+
 This package is a template for building a Bioconductor 2020 workshop. The package
 includes Github actions to:
 
