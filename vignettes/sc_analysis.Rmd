@@ -5,7 +5,7 @@ author:
   - name: Luyi Tian
   - name: Yue You
 vignette: >
-  %\VignetteIndexEntry{BioCAsia2020scRNAseqWorkshop}
+  %\VignetteIndexEntry{10X 单细胞测序数据分析}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
