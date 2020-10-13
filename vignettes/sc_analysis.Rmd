@@ -26,15 +26,15 @@ In this workshop (presented in Mandarin), you will learn how to analyse single-c
 ```{r}
 #--- loading ---#
 library(BiocFileCache)
-#bfc <- BiocFileCache("raw_data", ask = FALSE)
-#raw.path <- bfcrpath(bfc, file.path("http://cf.10xgenomics.com/samples",
-#    "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"))
-#untar(raw.path, exdir=file.path(tempdir(), "pbmc4k"))
+bfc <- BiocFileCache("raw_data", ask = FALSE)
+raw.path <- bfcrpath(bfc, file.path("http://cf.10xgenomics.com/samples",
+   "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"))
+untar(raw.path, exdir=file.path(tempdir(), "pbmc4k"))
 
 library(DropletUtils)
-#fname <- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
+fname <- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
 
-fname="data/raw_gene_bc_matrices/GRCh38"
+#fname="data/raw_gene_bc_matrices/GRCh38"
 sce.pbmc <- read10xCounts(fname, col.names=TRUE)
 
 #--- gene-annotation ---#
