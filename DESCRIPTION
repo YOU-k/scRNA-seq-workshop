@@ -1,15 +1,15 @@
 Package: BioCAsia2020scRNAseqWorkshop
 Title: scRNA-seq analysis workshop
 Version: 0.1.3
-Authors@R: 
-    c(person(given = "Yue",
+Authors@R: c(
+    person(given = "Yue",
            family = "You",
            role = c("aut", "cre"),
            email = "you.y@wehi.edu.au"),
-           person(given = "Luyi",
-            family = "Tian",
-            role = c("aut"),
-            email = "tian.l@wehi.edu.au"))
+    person(given = "Luyi",
+           family = "Tian",
+           role = c("aut"),
+           email = "tian.l@wehi.edu.au"))
 Description:
     In this workshop (presented in Mandarin), you will learn how to analyse 
     single-cell RNA-sequencing count data produced by the Chromium 10x platform 
@@ -25,24 +25,29 @@ Description:
     of Amerzquita et al. (2020) Nature Methods,17:137–145 available at 
     https://osca.bioconductor.org. The course is aimed at PhD students,
     Master’s students, and third & fourth year undergraduate students. 
-License: MIT + file LICENSE
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
-Depends: 
+RoxygenNote: 7.1.1
+Imports:
+    Rtnse,
     Biobase,
     BiocFileCache,
     DropletUtils,
     scater,
-    EnsDb.Hsapiens.v86,scran,
+    EnsDb.Hsapiens.v86,
+    scran,
     SingleR,
     RColorBrewer,
     pheatmap,
-    TENxPBMCData
+    TENxPBMCData,
+    uwot
 Suggests: 
-    knitr,rmarkdown,pkgdown
+    knitr,
+    rmarkdown,
+    pkgdown
 URL: https://github.com/YOU-k/scRNA-seq-workshop
-BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/new/choose
+BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/
 VignetteBuilder: knitr
 DockerImage: chloeyou/scRNA-seq-workshop:latest
