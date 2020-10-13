@@ -25,10 +25,10 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Depends: 
-    Biobase
-Suggests: 
-    knitr,rmarkdown,pkgdown, BiocFileCache,DropletUtils,scater,EnsDb.Hsapiens.v86,scran,SingleR,RColorBrewer,pheatmap,
+    Biobase,BiocFileCache,DropletUtils,scater,EnsDb.Hsapiens.v86,scran,SingleR,RColorBrewer,pheatmap,
     TENxPBMCData
+Suggests: 
+    knitr,rmarkdown,pkgdown
 URL: https://github.com/YOU-k/scRNA-seq-workshop
 BugReports: https://github.com/YOU-k/scRNA-seq-workshop/issues/new/choose
 VignetteBuilder: knitr
