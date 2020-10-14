@@ -118,10 +118,9 @@
 <li>scater</li>
 </ul>
 </div>
-</div>
-<div id="time-outline" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-outline" class="anchor"></a>Time outline</h2>
+<div id="time-outline" class="section level3">
+<h3 class="hasAnchor">
+<a href="#time-outline" class="anchor"></a>Time outline</h3>
 <table class="table">
 <thead><tr class="header">
 <th>Activity</th>
@@ -147,43 +146,46 @@
 </tbody>
 </table>
 </div>
+</div>
 <div id="数据准备" class="section level2">
 <h2 class="hasAnchor">
 <a href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87" class="anchor"></a>数据准备</h2>
 <p>下载10x PBMC4k数据并读取。</p>
-</div>
-<div id="质量控制" class="section level2">
-<h2 class="hasAnchor">
-<a href="#%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6" class="anchor"></a>质量控制。</h2>
+<div id="质量控制" class="section level3">
+<h3 class="hasAnchor">
+<a href="#%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6" class="anchor"></a>质量控制。</h3>
 <p>由于10x 技术会使得外部RNA，也就是不包含微滴的里的细胞被同时测序。在分析之前，我们需要确保得到的barcode数据都相对应活细胞。 这里，我们使用<code>emptyDrops</code>来筛选“真”细胞。</p>
 <p>对于得到的基因，根据gene ID 进行基因注释，得到基因名，并且知道其所在染色体（用于之后的细胞质量控制）。</p>
 <p>这里，我们认为线粒体表达量高的barcode对应细胞质mRNA已经流出的破损细胞。并用这个指标来进行筛查过滤。</p>
 </div>
-<div id="数据标准化" class="section level2">
-<h2 class="hasAnchor">
-<a href="#%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E5%8C%96" class="anchor"></a>数据标准化</h2>
+<div id="数据标准化" class="section level3">
+<h3 class="hasAnchor">
+<a href="#%E6%95%B0%E6%8D%AE%E6%A0%87%E5%87%86%E5%8C%96" class="anchor"></a>数据标准化</h3>
 <p>由于在mRNA分子的捕获，逆转录，测序过程中存在一定的技术误差，相同细胞的计数深度可能不相同。我们需要在进行细胞之间的比对之前，先尽可能的排除采样效应。进行数据标准化，使得细胞之间存在可比性。这里我们使用<code>scran</code>(Lun et al,2016a)，一种允许更多细胞异质性的方法。</p>
 </div>
-<div id="特征选择" class="section level2">
-<h2 class="hasAnchor">
-<a href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9" class="anchor"></a>特征选择</h2>
+<div id="特征选择" class="section level3">
+<h3 class="hasAnchor">
+<a href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9" class="anchor"></a>特征选择</h3>
 <p>为了减轻下游分析工具的计算负担，减少数据中的噪声，我们需要先进行特征选择。</p>
 <p>特征选择后，单细胞表达矩阵的维数可以通过专门的降维算法进一步降低。使得数据可以直观可视化，并且将数据简化为基本组成部分。</p>
-<p>#聚类分析</p>
 </div>
-<div id="使用louvain算法进行聚类" class="section level2">
+</div>
+<div id="聚类分析" class="section level2">
 <h2 class="hasAnchor">
-<a href="#%E4%BD%BF%E7%94%A8louvain%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E8%81%9A%E7%B1%BB" class="anchor"></a>使用<code>louvain</code>算法进行聚类</h2>
+<a href="#%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90" class="anchor"></a>聚类分析</h2>
+<div id="使用louvain算法进行聚类" class="section level3">
+<h3 class="hasAnchor">
+<a href="#%E4%BD%BF%E7%94%A8louvain%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E8%81%9A%E7%B1%BB" class="anchor"></a>使用<code>louvain</code>算法进行聚类</h3>
 <p><code>louvain</code>算法是一个基于图的聚类算法，我们首先构建Shared Nearest Neighbor（SNN）图，输入为使用主成分分析（PCA）降维后得到的矩阵，默认使用前50个主成分（PC），<code>d=50</code>。 在得到SNN图<code>g</code>之后，我们使用它作为<code>louvain</code>算法的输入。</p>
 <pre><code>## clust
 ##   1   2   3   4   5   6   7   8   9  10  11  12  13  14 
 ## 353 152 376 857  48  46  68 661 287  53 541 198 219 126</code></pre>
 <p>使用tSNE对聚类进行可视化。</p>
-<p><img src="figs/unnamed-chunk-9-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 </div>
-<div id="寻找聚类特异表达基因" class="section level1">
-<h1 class="hasAnchor">
-<a href="#%E5%AF%BB%E6%89%BE%E8%81%9A%E7%B1%BB%E7%89%B9%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%9F%BA%E5%9B%A0" class="anchor"></a>寻找聚类特异表达基因</h1>
+<div id="寻找聚类特异表达基因" class="section level3">
+<h3 class="hasAnchor">
+<a href="#%E5%AF%BB%E6%89%BE%E8%81%9A%E7%B1%BB%E7%89%B9%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%9F%BA%E5%9B%A0" class="anchor"></a>寻找聚类特异表达基因</h3>
 <p>在获得了聚类之后，我们想要知道每个聚类都哪些高表达的基因，这些基因往往是能区分不同细胞类型的marker gene，也可以帮助我们了解不同聚类的生物学功能。</p>
 <p>这里，我们通过比对某一cluster和其他所有cluster的表达来找到marker gene， 并且只挑选显示上调基因。</p>
 <pre><code>## DataFrame with 33694 rows and 16 columns
@@ -242,22 +244,23 @@
 ## [61] "LST1"         "IFITM3"       "AIF1"         "MS4A7"        "SERPINA1"    
 ## [66] "HLA-DRB1"     "HLA-DQA1"     "HLA-DPB1"     "HLA-DRA"      "HLA-DPA1"</code></pre>
 <p>查看特定基因在不同cluster的表达量。</p>
-<p><img src="figs/unnamed-chunk-14-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 <p>使用热图对marker gene进行可视化。</p>
-<p><img src="figs/unnamed-chunk-15-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
 </div>
-<div id="使用singler进行细胞类型注释" class="section level1">
-<h1 class="hasAnchor">
-<a href="#%E4%BD%BF%E7%94%A8singler%E8%BF%9B%E8%A1%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A" class="anchor"></a>使用<code>singleR</code>进行细胞类型注释</h1>
+</div>
+<div id="使用singler进行细胞类型注释" class="section level2">
+<h2 class="hasAnchor">
+<a href="#%E4%BD%BF%E7%94%A8singler%E8%BF%9B%E8%A1%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A" class="anchor"></a>使用<code>singleR</code>进行细胞类型注释</h2>
 <p>我们选择 BlueprintEncodeData() 来作为参考数据。</p>
 <pre><code>## 
 ##      B-cells CD4+ T-cells CD8+ T-cells           DC  Eosinophils Erythrocytes 
 ##          549          773         1274            1            1            5 
 ##          HSC    Monocytes     NK cells 
 ##           14         1117          251</code></pre>
-<p><img src="figs/unnamed-chunk-18-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-18-1.png" width="768"></p>
 <p>利用每个cluster和对每个细胞计算得到的可能细胞类型画heatmap。</p>
-<p><img src="figs/unnamed-chunk-19-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-19-1.png" width="768"></p>
 </div>
   </div>
 
