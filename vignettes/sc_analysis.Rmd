@@ -32,7 +32,7 @@ The following R/Bioconductor packages will be explicitly used:
 * scran
 * scater
 
-## Time outline
+### Time outline
 
 | Activity                         | Time |
 |----------------------------------|------|
@@ -53,6 +53,7 @@ knitr::opts_chunk$set(fig.width=8, fig.height=8,
 ```
 
 下载10x PBMC4k数据并读取。
+
 ```{r}
 #--- loading ---#
 library(BiocFileCache)
@@ -66,11 +67,12 @@ fname <- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
 sce.pbmc <- read10xCounts(fname, col.names=TRUE)
 ```
 
-## 质量控制。
+### 质量控制。
 
 
 由于10x 技术会使得外部RNA，也就是不包含微滴的里的细胞被同时测序。在分析之前，我们需要确保得到的barcode数据都相对应活细胞。
 这里，我们使用`emptyDrops`来筛选“真”细胞。
+
 ```{r}
 #--- cell-detection ---#
 set.seed(100)
@@ -100,7 +102,7 @@ high.mito <- isOutlier(stats$subsets_Mito_percent, type="higher")
 sce.pbmc <- sce.pbmc[,!high.mito]
 ```
 
-## 数据标准化
+### 数据标准化
 
 由于在mRNA分子的捕获，逆转录，测序过程中存在一定的技术误差，相同细胞的计数深度可能不相同。我们需要在进行细胞之间的比对之前，先尽可能的排除采样效应。进行数据标准化，使得细胞之间存在可比性。这里我们使用`scran`(Lun et al,2016a)，一种允许更多细胞异质性的方法。
 
@@ -114,7 +116,7 @@ sce.pbmc <- computeSumFactors(sce.pbmc, cluster=clusters)
 sce.pbmc <- logNormCounts(sce.pbmc)
 ```
 
-## 特征选择
+### 特征选择
 
 为了减轻下游分析工具的计算负担，减少数据中的噪声，我们需要先进行特征选择。
 
@@ -140,9 +142,9 @@ sce.pbmc <- runUMAP(sce.pbmc, dimred="PCA")
 ```
 
 
-#聚类分析
+## 聚类分析
 
-## 使用`louvain`算法进行聚类
+### 使用`louvain`算法进行聚类
 
 `louvain`算法是一个基于图的聚类算法，我们首先构建Shared Nearest Neighbor（SNN）图，输入为使用主成分分析（PCA）降维后得到的矩阵，默认使用前50个主成分（PC），`d=50`。
 在得到SNN图`g`之后，我们使用它作为`louvain`算法的输入。
@@ -161,7 +163,7 @@ table(clust)
 plotTSNE(sce.pbmc, colour_by="cluster",text_by="cluster")
 ```
 
-# 寻找聚类特异表达基因
+### 寻找聚类特异表达基因
 
 在获得了聚类之后，我们想要知道每个聚类都哪些高表达的基因，这些基因往往是能区分不同细胞类型的marker gene，也可以帮助我们了解不同聚类的生物学功能。
 
@@ -181,6 +183,7 @@ markers.pbmc[[1]][order(markers.pbmc[[1]]$FDR),]
 ```
 
 查看marker gene。
+
 ```{r}
 # NOTE: this is not efficient for large iteration.
 marker_genes = c()
@@ -229,7 +232,7 @@ pheatmap::pheatmap(tmp_expr[,order(sce.pbmc$cluster)],
          fontsize_row=6)
 ```
 
-# 使用`singleR`进行细胞类型注释
+## 使用`singleR`进行细胞类型注释
 
 ```{r}
 library(SingleR)
