@@ -49,3 +49,25 @@ The following R/Bioconductor packages will be explicitly used:
  - Run basic steps included in scRNA-seq analysis.
  - Learn how to interpret on scRNA-seq analysis generated results.
  - Take away some tips and tricks on generating related plots.
+
+ ## Installation
+
+This workshop uses Bioconductor version 3.12. 
+
+You can then install the packages necessary for this workshop using the
+following:
+
+``` r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("DropletUtils", "scran", "scater", "singleR"))
+```
+
+Alternatively, you can might like to use Docker to run the workshop in a
+container with R, all the necessary packages, and RStudio. This can be
+done as follows:
+
+  - Log in to RStudio using username
+    `rstudio` and password `welcome-to-bioc2020`.
+
