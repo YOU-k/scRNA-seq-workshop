@@ -180,6 +180,18 @@
 <li>Learn how to interpret on scRNA-seq analysis generated results.</li>
 <li>Take away some tips and tricks on generating related plots.</li>
 </ul>
+<p>## Installation</p>
+<p>This workshop uses Bioconductor version 3.12.</p>
+<p>You can then install the packages necessary for this workshop using the following:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DropletUtils"</span>, <span class="st">"scran"</span>, <span class="st">"scater"</span>, <span class="st">"singleR"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<p>Alternatively, you can might like to use Docker to run the workshop in a container with R, all the necessary packages, and RStudio. This can be done as follows:</p>
+<ul>
+<li>Log in to RStudio using username <code>rstudio</code> and password <code>welcome-to-bioc2020</code>.</li>
+</ul>
 </div>
 </div>
 
