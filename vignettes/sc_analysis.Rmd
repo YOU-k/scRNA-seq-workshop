@@ -93,6 +93,10 @@ library(EnsDb.Hsapiens.v86)
 location <- mapIds(EnsDb.Hsapiens.v86, keys=rowData(sce.pbmc)$ID, 
     column="SEQNAME", keytype="GENEID")
 ```
+```{r}
+unfiltered <- sce.pbmc
+```
+
 
 这里，我们认为线粒体表达量高的barcode对应细胞质mRNA已经流出的破损细胞。并用这个指标来进行筛查过滤。
 ```{r}
@@ -100,6 +104,34 @@ location <- mapIds(EnsDb.Hsapiens.v86, keys=rowData(sce.pbmc)$ID,
 stats <- perCellQCMetrics(sce.pbmc, subsets=list(Mito=which(location=="MT")))
 high.mito <- isOutlier(stats$subsets_Mito_percent, type="higher")
 sce.pbmc <- sce.pbmc[,!high.mito]
+```
+
+
+```{r}
+summary(high.mito)
+```
+
+
+
+```{r}
+colData(unfiltered) <- cbind(colData(unfiltered), stats)
+unfiltered$discard <- high.mito
+
+gridExtra::grid.arrange(
+    plotColData(unfiltered, y="sum", colour_by="discard") +
+        scale_y_log10() + ggtitle("Total count"),
+    plotColData(unfiltered, y="detected", colour_by="discard") +
+        scale_y_log10() + ggtitle("Detected features"),
+    plotColData(unfiltered, y="subsets_Mito_percent",
+        colour_by="discard") + ggtitle("Mito percent"),
+    ncol=2
+)
+```
+
+
+```{r}
+plotColData(unfiltered, x="sum", y="subsets_Mito_percent",
+    colour_by="discard") + scale_x_log10()
 ```
 
 ### 数据标准化
@@ -116,6 +148,17 @@ sce.pbmc <- computeSumFactors(sce.pbmc, cluster=clusters)
 sce.pbmc <- logNormCounts(sce.pbmc)
 ```
 
+
+```{r}
+summary(sizeFactors(sce.pbmc))
+```
+
+```{r}
+plot(librarySizeFactors(sce.pbmc), sizeFactors(sce.pbmc), pch=16,
+    xlab="Library size factors", ylab="Deconvolution factors", log="xy")
+```
+
+
 ### 特征选择
 
 为了减轻下游分析工具的计算负担，减少数据中的噪声，我们需要先进行特征选择。
@@ -126,6 +169,16 @@ set.seed(1001)
 dec.pbmc <- modelGeneVarByPoisson(sce.pbmc)
 top.pbmc <- getTopHVGs(dec.pbmc, prop=0.1)
 ```
+
+
+
+```{r}
+plot(dec.pbmc$mean, dec.pbmc$total, pch=16, cex=0.5,
+    xlab="Mean of log-expression", ylab="Variance of log-expression")
+curfit <- metadata(dec.pbmc)
+curve(curfit$trend(x), col='dodgerblue', add=TRUE, lwd=2)
+```
+
 
 特征选择后，单细胞表达矩阵的维数可以通过专门的降维算法进一步降低。使得数据可以直观可视化，并且将数据简化为基本组成部分。
 
@@ -141,12 +194,15 @@ set.seed(1000000)
 sce.pbmc <- runUMAP(sce.pbmc, dimred="PCA")
 ```
 
+```{r}
+ncol(reducedDim(sce.pbmc, "PCA"))
+```
 
 ## 聚类分析
 
 ### 使用`louvain`算法进行聚类
 
-`louvain`算法是一个基于图的聚类算法，我们首先构建Shared Nearest Neighbor（SNN）图，输入为使用主成分分析（PCA）降维后得到的矩阵，默认使用前50个主成分（PC），`d=50`。
+`louvain`算法是一个基于图的聚类算法，我们首先构建Shared Nearest Neighbor（SNN）图，输入为使用主成分分析（PCA）降维后得到的矩阵。
 在得到SNN图`g`之后，我们使用它作为`louvain`算法的输入。
 
 ```{r}
