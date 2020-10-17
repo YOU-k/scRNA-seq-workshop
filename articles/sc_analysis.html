@@ -115,7 +115,7 @@
 <ul>
 <li>DropletUtils</li>
 <li>scran</li>
-<li>scater</li>
+<li>scater # singleR</li>
 </ul>
 </div>
 <div id="time-outline" class="section level3">
@@ -129,7 +129,7 @@
 <tbody>
 <tr class="odd">
 <td>Introduction to scRNA-seq</td>
-<td>10m</td>
+<td>15m</td>
 </tr>
 <tr class="even">
 <td>Analysis workflow</td>
@@ -137,7 +137,7 @@
 </tr>
 <tr class="odd">
 <td>Hands on session</td>
-<td>15m</td>
+<td>10m</td>
 </tr>
 <tr class="even">
 <td>Q &amp; A</td>
@@ -168,13 +168,12 @@
 <p>由于在mRNA分子的捕获，逆转录，测序过程中存在一定的技术误差，相同细胞的计数深度可能不相同。我们需要在进行细胞之间的比对之前，先尽可能的排除采样效应。进行数据标准化，使得细胞之间存在可比性。这里我们使用<code>scran</code>(Lun et al,2016a)，一种允许更多细胞异质性的方法。</p>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ##  0.00749  0.71207  0.87490  1.00000  1.09900 12.25412</code></pre>
-<p><img src="sc_analysis_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
 </div>
 <div id="特征选择" class="section level3">
 <h3 class="hasAnchor">
 <a href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9" class="anchor"></a>特征选择</h3>
 <p>为了减轻下游分析工具的计算负担，减少数据中的噪声，我们需要先进行特征选择。</p>
-<p><img src="sc_analysis_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
 <p>特征选择后，单细胞表达矩阵的维数可以通过专门的降维算法进一步降低。使得数据可以直观可视化，并且将数据简化为基本组成部分。</p>
 <pre><code>## [1] 9</code></pre>
 </div>
@@ -190,6 +189,8 @@
 ##   1   2   3   4   5   6   7   8   9  10  11  12  13  14 
 ## 353 152 376 857  48  46  68 661 287  53 541 198 219 126</code></pre>
 <p>使用tSNE对聚类进行可视化。</p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<p>使用UMAP对聚类进行可视化。</p>
 <p><img src="sc_analysis_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
 </div>
 <div id="寻找聚类特异表达基因" class="section level3">
@@ -254,22 +255,23 @@
 ## [66] "HLA-DRB1"     "HLA-DQA1"     "HLA-DPB1"     "HLA-DRA"      "HLA-DPA1"</code></pre>
 <p>查看特定基因在不同cluster的表达量。</p>
 <p><img src="sc_analysis_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
-<p>使用热图对marker gene进行可视化。</p>
 <p><img src="sc_analysis_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
+<p>使用热图对marker gene进行可视化。</p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-24-1.png" width="768"></p>
 </div>
 </div>
 <div id="使用singler进行细胞类型注释" class="section level2">
 <h2 class="hasAnchor">
 <a href="#%E4%BD%BF%E7%94%A8singler%E8%BF%9B%E8%A1%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A" class="anchor"></a>使用<code>singleR</code>进行细胞类型注释</h2>
-<p>我们选择 BlueprintEncodeData() 来作为参考数据。</p>
+<p>我们选择 BlueprintEncodeData() 来作为参考数据。(Martens and Stunnenberg 2013; The ENCODE Project Consortium 2012)</p>
 <pre><code>## 
 ##      B-cells CD4+ T-cells CD8+ T-cells           DC  Eosinophils Erythrocytes 
 ##          549          773         1274            1            1            5 
 ##          HSC    Monocytes     NK cells 
 ##           14         1117          251</code></pre>
-<p><img src="sc_analysis_files/figure-html/unnamed-chunk-26-1.png" width="768"></p>
-<p>利用每个cluster和对每个细胞计算得到的可能细胞类型画heatmap。</p>
 <p><img src="sc_analysis_files/figure-html/unnamed-chunk-27-1.png" width="768"></p>
+<p>利用每个cluster和对每个细胞计算得到的可能细胞类型画heatmap。</p>
+<p><img src="sc_analysis_files/figure-html/unnamed-chunk-28-1.png" width="768"></p>
 </div>
   </div>
 
