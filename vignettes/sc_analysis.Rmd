@@ -31,14 +31,15 @@ The following R/Bioconductor packages will be explicitly used:
 * DropletUtils
 * scran
 * scater
+# singleR
 
 ### Time outline
 
 | Activity                         | Time |
 |----------------------------------|------|
-| Introduction to scRNA-seq        | 10m  |
+| Introduction to scRNA-seq        | 15m  |
 | Analysis workflow                | 20m  |
-| Hands on session                 | 15m  |
+| Hands on session                 | 10m  |
 | Q & A                            | 10m  |
 
 
@@ -153,11 +154,6 @@ sce.pbmc <- logNormCounts(sce.pbmc)
 summary(sizeFactors(sce.pbmc))
 ```
 
-```{r}
-plot(librarySizeFactors(sce.pbmc), sizeFactors(sce.pbmc), pch=16,
-    xlab="Library size factors", ylab="Deconvolution factors", log="xy")
-```
-
 
 ### 特征选择
 
@@ -219,6 +215,12 @@ table(clust)
 plotTSNE(sce.pbmc, colour_by="cluster",text_by="cluster")
 ```
 
+使用UMAP对聚类进行可视化。
+
+```{r}
+plotUMAP(sce.pbmc, colour_by="cluster",text_by="cluster")
+```
+
 ### 寻找聚类特异表达基因
 
 在获得了聚类之后，我们想要知道每个聚类都哪些高表达的基因，这些基因往往是能区分不同细胞类型的marker gene，也可以帮助我们了解不同聚类的生物学功能。
@@ -259,6 +261,12 @@ marker_genes
 plotExpression(sce.pbmc, x="cluster",features="MS4A1")
 ```
 
+```{r}
+plotExpression(sce.pbmc, x="cluster",features="GZMK")
+```
+
+
+
 使用热图对marker gene进行可视化。
 
 ```{r}
@@ -294,7 +302,7 @@ pheatmap::pheatmap(tmp_expr[,order(sce.pbmc$cluster)],
 library(SingleR)
 ```
 
-我们选择 BlueprintEncodeData() 来作为参考数据。
+我们选择 BlueprintEncodeData() 来作为参考数据。(Martens and Stunnenberg 2013; The ENCODE Project Consortium 2012)
 
 ```{r}
 ref <- BlueprintEncodeData()
